@@ -29,10 +29,10 @@ public class Aes {
 
     public String decrypt(String encryptedText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         byte[] textInBytes = decode(encryptedText);
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
         GCMParameterSpec spec = new GCMParameterSpec(TAG_LENGTH, cipher.getIV());
-        cipher.init(Cipher.DECRYPT_MODE, key, spec);
-        return new String(cipher.doFinal(textInBytes));
+        decryptionCipher.init(Cipher.DECRYPT_MODE, key, spec);
+        return new String(decryptionCipher.doFinal(textInBytes));
     }
 
     public String encode(byte[] data){
@@ -46,7 +46,7 @@ public class Aes {
         Aes aes = new Aes();
         try {
             aes.init();
-            String encrypted = aes.encrypt("getesteter Test");
+            String encrypted = aes.encrypt("Dieser Text soll verschlüsselt werden");
             String decrypted = aes.decrypt(encrypted);
 
             System.out.println("Encrpted: " +encrypted);
