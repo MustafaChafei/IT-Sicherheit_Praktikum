@@ -11,7 +11,7 @@ import java.util.Base64;
 public class Aes {
     SecretKey key;
     int KEY_SIZE = 128;
-    Cipher cipher;
+    Cipher enCipher;
     int TAG_LENGTH = 128;
 
     public void init() throws NoSuchAlgorithmException {
@@ -22,15 +22,15 @@ public class Aes {
 
     public String encrypt(String text) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         byte[] textInBytes = text.getBytes();
-        cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        return encode(cipher.doFinal(textInBytes));
+        enCipher = Cipher.getInstance("AES/GCM/NoPadding");
+        enCipher.init(Cipher.ENCRYPT_MODE, key);
+        return encode(enCipher.doFinal(textInBytes));
     }
 
     public String decrypt(String encryptedText) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         byte[] textInBytes = decode(encryptedText);
         Cipher decryptionCipher = Cipher.getInstance("AES/GCM/NoPadding");
-        GCMParameterSpec spec = new GCMParameterSpec(TAG_LENGTH, cipher.getIV());
+        GCMParameterSpec spec = new GCMParameterSpec(TAG_LENGTH, enCipher.getIV());
         decryptionCipher.init(Cipher.DECRYPT_MODE, key, spec);
         return new String(decryptionCipher.doFinal(textInBytes));
     }
